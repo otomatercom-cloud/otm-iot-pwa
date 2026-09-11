@@ -9,7 +9,7 @@ const ITEMS = [
   { key: 'devices', label: 'Devices', icon: Boxes, href: '/devices' },
   { key: 'automation', label: 'Automation', icon: Share2, href: '/dashboard' },
   { key: 'remote', label: 'Remote', icon: MonitorPlay, href: '/dashboard' },
-  { key: 'settings', label: 'Settings', icon: Settings, href: '/subscribe' },
+  { key: 'settings', label: 'Settings', icon: Settings, href: '/settings' },
 ];
 
 export default function BottomNav() {

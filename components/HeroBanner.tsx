@@ -1,6 +1,7 @@
 // components/HeroBanner.tsx
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Bell } from 'lucide-react';
 
 function getGreeting(): string {
@@ -11,6 +12,7 @@ function getGreeting(): string {
 }
 
 export default function HeroBanner({ subtitle }: { subtitle: string }) {
+  const router = useRouter();
   return (
     <div
       className="relative px-5 pt-6 pb-8 overflow-hidden"
@@ -27,7 +29,8 @@ export default function HeroBanner({ subtitle }: { subtitle: string }) {
           <p className="text-sm text-panel-muted mt-1">{subtitle}</p>
         </div>
         <button
-          aria-label="Notifications"
+          aria-label="Settings and notifications"
+          onClick={() => router.push('/settings')}
           className="h-9 w-9 rounded-full border border-panel-border flex items-center justify-center shrink-0"
         >
           <Bell size={16} className="text-panel-muted" />
