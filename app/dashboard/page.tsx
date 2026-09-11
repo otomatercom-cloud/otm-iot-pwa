@@ -158,7 +158,10 @@ export default function DashboardPage() {
           </h1>
           {userName && <p className="text-xs text-panel-muted mt-0.5">You're signed in</p>}
           {!data.subscription_active && (
-            <p className="text-xs text-danger mt-0.5">Subscription inactive</p>
+            <p className="text-xs text-danger mt-0.5">
+              Subscription inactive ·{' '}
+              <a href="/subscribe" className="underline">Subscribe</a>
+            </p>
           )}
         </div>
         <button

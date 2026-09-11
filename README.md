@@ -9,7 +9,13 @@ this app's own `/api/*` routes on the server, which forward the Odoo session coo
 ```
 ODOO_BASE_URL=https://iot.otomater.com
 ODOO_DB=otomater_iot
+
+RAZORPAY_KEY_ID=rzp_live_xxxxxxxx
+RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxx
 ```
+`RAZORPAY_KEY_SECRET` must never be exposed to the browser - it's only used server-side in
+`/api/subscribe/create-order` (to create the order) and `/api/subscribe/verify` (to recompute
+and check the payment signature). Get both from your Razorpay dashboard → Settings → API Keys.
 
 ## Run locally
 
@@ -47,6 +53,12 @@ before shipping; iOS's "Add to Home Screen" icon comes from the largest one list
   service worker also has a push-notification handler wired (device offline, subscription
   expiring, etc.) ready for a VAPID push-subscription flow to be added server-side.
 
+- **Subscriptions**: `/subscribe` lists active plans (from `otm.iot.subscription.plan` via
+  `/api/plans`), customer pays with Razorpay Checkout, `/api/subscribe/verify` independently
+  recomputes the payment signature server-side (never trusts the browser's "success" claim)
+  before telling Odoo to activate it via `/api/iot/subscribe/confirm` →
+  `partner.action_renew_iot_subscription()`.
+
 ## Next steps (not built yet)
 
 1. **Real-time instead of polling**: subscribe to Odoo's `bus.bus` (longpolling) from a
@@ -56,5 +68,7 @@ before shipping; iOS's "Add to Home Screen" icon comes from the largest one list
    store it against the Odoo partner, so the module can push "device went offline" /
    "subscription expiring" alerts.
 3. **Real icons** (see above).
-4. **Billing**: a Razorpay/Stripe checkout flow that calls
-   `res.partner.action_renew_iot_subscription()` on successful payment.
+4. **Razorpay webhook as a backup path**: the current flow confirms the subscription from
+   the browser's payment callback (`handler`), which is reliable but skipped if the user
+   closes the tab mid-flow. Add a Razorpay webhook endpoint that also calls
+   `/api/iot/subscribe/confirm` server-to-server as a safety net for that edge case.
