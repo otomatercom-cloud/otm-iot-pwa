@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
+import { ChevronLeft } from 'lucide-react';
 
 type Plan = {
   id: number;
@@ -148,8 +149,13 @@ export default function SubscribePage() {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       <main className="min-h-screen pb-10">
         <header className="border-b border-panel-border px-4 py-3.5">
-          <h1 className="font-medium">Choose a Plan</h1>
-          <p className="text-xs text-panel-muted mt-0.5">Subscribe to control your devices</p>
+          <div className="flex items-center gap-2 mb-0.5">
+            <button onClick={() => router.push('/dashboard')} aria-label="Back to home">
+              <ChevronLeft size={20} className="text-panel-muted" />
+            </button>
+            <h1 className="font-medium">Choose a Plan</h1>
+          </div>
+          <p className="text-xs text-panel-muted mt-0.5 ml-7">Subscribe to control your devices</p>
         </header>
 
         <div className="px-4 pt-4 max-w-md mx-auto">

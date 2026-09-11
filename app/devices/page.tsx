@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
+import { Plus, ChevronLeft } from 'lucide-react';
 import DeviceIcon from '@/components/DeviceIcon';
 import BottomNav from '@/components/BottomNav';
 
@@ -21,6 +21,7 @@ type Device = {
 export default function DevicesPage() {
   const router = useRouter();
   const [devices, setDevices] = useState<Device[] | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const [showClaim, setShowClaim] = useState(false);
   const [claimCode, setClaimCode] = useState('');
   const [claiming, setClaiming] = useState(false);
@@ -34,7 +35,13 @@ export default function DevicesPage() {
       return;
     }
     const json = await res.json();
-    setDevices(json.devices || []);
+    if (json.error) {
+      setLoadError(true);
+      setDevices(null);
+    } else {
+      setLoadError(false);
+      setDevices(json.devices || []);
+    }
   }, [router]);
 
   useEffect(() => {
@@ -76,7 +83,12 @@ export default function DevicesPage() {
   return (
     <main className="min-h-screen pb-20">
       <header className="border-b border-panel-border px-4 py-3.5 flex items-center justify-between">
-        <h1 className="font-medium">Your Devices</h1>
+        <div className="flex items-center gap-2">
+          <button onClick={() => router.push('/dashboard')} aria-label="Back to home">
+            <ChevronLeft size={20} className="text-panel-muted" />
+          </button>
+          <h1 className="font-medium">Your Devices</h1>
+        </div>
         <button
           onClick={() => setShowClaim(!showClaim)}
           className="flex items-center gap-1 text-sm text-amber border border-amber/40 rounded px-3 py-1.5"
@@ -113,15 +125,25 @@ export default function DevicesPage() {
           </div>
         )}
 
-        {devices === null ? (
+        {devices === null && !loadError ? (
           <p className="text-sm text-panel-muted text-center mt-8">Loading…</p>
-        ) : devices.length === 0 ? (
+        ) : loadError ? (
+          <div className="flex flex-col items-center gap-3 mt-8">
+            <p className="text-sm text-panel-muted">Could not load your devices.</p>
+            <button
+              onClick={() => fetchDevices()}
+              className="text-sm border border-panel-border rounded px-3 py-1.5 text-panel-text"
+            >
+              Retry
+            </button>
+          </div>
+        ) : devices!.length === 0 ? (
           <p className="text-sm text-panel-muted text-center mt-8">
             No devices yet. Tap "Add Device" and enter the claim code from your device to connect it.
           </p>
         ) : (
           <div className="space-y-2">
-            {devices.map((d) => (
+            {devices!.map((d) => (
               <div key={d.id} className="rounded border border-panel-border bg-panel-surface p-3.5 flex items-center gap-3">
                 <DeviceIcon iconKey={d.icon} active={d.status === 'online'} size={22} />
                 <div className="flex-1 min-w-0">

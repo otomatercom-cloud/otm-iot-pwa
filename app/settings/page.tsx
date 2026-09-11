@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, ChevronRight } from 'lucide-react';
+import { LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
 export default function SettingsPage() {
@@ -35,7 +35,10 @@ export default function SettingsPage() {
 
   return (
     <main className="min-h-screen pb-20">
-      <header className="border-b border-panel-border px-4 py-3.5">
+      <header className="border-b border-panel-border px-4 py-3.5 flex items-center gap-2">
+        <button onClick={() => router.push('/dashboard')} aria-label="Back to home">
+          <ChevronLeft size={20} className="text-panel-muted" />
+        </button>
         <h1 className="font-medium">Settings</h1>
       </header>
 
