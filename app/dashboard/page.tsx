@@ -28,8 +28,17 @@ const POLL_MS = 5000;
 export default function DashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<DevicesResponse | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   const [pendingKey, setPendingKey] = useState<string | null>(null);
   const [error, setError] = useState('');
+
+  const fetchMe = useCallback(async () => {
+    const res = await fetch('/api/auth/me');
+    if (res.ok) {
+      const json = await res.json();
+      setUserName(json.name);
+    }
+  }, []);
 
   const fetchDevices = useCallback(async () => {
     const res = await fetch('/api/devices');
@@ -42,10 +51,11 @@ export default function DashboardPage() {
   }, [router]);
 
   useEffect(() => {
+    fetchMe();
     fetchDevices();
     const id = setInterval(fetchDevices, POLL_MS);
     return () => clearInterval(id);
-  }, [fetchDevices]);
+  }, [fetchMe, fetchDevices]);
 
   async function handleToggle(deviceId: number, channelNo: number) {
     setError('');
@@ -104,8 +114,30 @@ export default function DashboardPage() {
 
   if (data.error) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-6">
-        <p className="text-panel-muted text-sm">Could not load your devices. Pull to refresh.</p>
+      <main className="min-h-screen flex flex-col">
+        <header className="border-b border-panel-border px-4 py-3.5 flex items-center justify-between">
+          <div>
+            <h1 className="font-medium">
+              {userName ? `Welcome, ${userName}` : 'Your Devices'}
+            </h1>
+            {userName && <p className="text-xs text-panel-muted mt-0.5">You're signed in</p>}
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-xs text-panel-muted border border-panel-border rounded px-2.5 py-1.5"
+          >
+            Sign out
+          </button>
+        </header>
+        <div className="flex-1 flex flex-col items-center justify-center px-6 gap-3">
+          <p className="text-panel-muted text-sm">Could not load your devices.</p>
+          <button
+            onClick={() => fetchDevices()}
+            className="text-sm border border-panel-border rounded px-3 py-1.5 text-panel-text"
+          >
+            Retry
+          </button>
+        </div>
       </main>
     );
   }
@@ -121,7 +153,10 @@ export default function DashboardPage() {
     <main className="min-h-screen pb-10">
       <header className="sticky top-0 z-10 border-b border-panel-border bg-panel-bg/95 backdrop-blur px-4 py-3.5 flex items-center justify-between">
         <div>
-          <h1 className="font-medium">Your Devices</h1>
+          <h1 className="font-medium">
+            {userName ? `Welcome, ${userName}` : 'Your Devices'}
+          </h1>
+          {userName && <p className="text-xs text-panel-muted mt-0.5">You're signed in</p>}
           {!data.subscription_active && (
             <p className="text-xs text-danger mt-0.5">Subscription inactive</p>
           )}
