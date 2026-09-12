@@ -22,5 +22,5 @@ export default function DeviceIcon({
   size?: number;
 }) {
   const Icon = (iconKey && ICON_MAP[iconKey.toLowerCase()]) || Zap;
-  return <Icon size={size} className={active ? 'text-amber' : 'text-panel-muted'} strokeWidth={1.75} />;
+  return <Icon size={size} className={active ? 'text-on' : 'text-panel-muted'} strokeWidth={1.75} />;
 }

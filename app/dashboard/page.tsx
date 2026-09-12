@@ -16,6 +16,7 @@ type Device = {
   type: string;
   icon: string | null;
   location: string | null;
+  room_name?: string | false;
   status: 'online' | 'offline';
   last_seen: string;
   channels: Channel[];
@@ -162,7 +163,7 @@ export default function DashboardPage() {
 
   const rooms = new Map<string, Device[]>();
   for (const d of data.devices) {
-    const room = d.location || 'Other';
+    const room = d.room_name || d.location || 'Other';
     if (!rooms.has(room)) rooms.set(room, []);
     rooms.get(room)!.push(d);
   }

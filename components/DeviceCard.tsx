@@ -59,8 +59,10 @@ export default function DeviceCard({
                 aria-label={`Turn ${ch.name} ${ch.is_on ? 'off' : 'on'}`}
                 disabled={isOffline || isPending}
                 onClick={() => onToggle(device.id, ch.channel_no)}
-                className={`relative h-7 w-12 rounded-full transition-colors disabled:opacity-40 ${
-                  ch.is_on ? 'bg-amber' : 'bg-panel-border'
+                className={`relative h-7 w-12 rounded-full transition-colors ${
+                  isOffline ? 'opacity-40' : ''
+                } ${isPending ? 'animate-pulse' : ''} ${
+                  ch.is_on ? 'bg-on' : 'bg-panel-border'
                 }`}
               >
                 <span

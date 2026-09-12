@@ -13,8 +13,11 @@ module.exports = {
           muted: '#8A92A0',
         },
         amber: {
-          DEFAULT: '#E8A34D',  // copper/amber - the "on" indicator color
+          DEFAULT: '#E8A34D',  // copper/amber - brand accent (buttons, highlights)
           dim: '#8C6A3E',
+        },
+        on: {
+          DEFAULT: '#4ADE80',  // vivid green - reserved for "this is ON" state only, never dimmed
         },
         danger: '#D9695F',
       },

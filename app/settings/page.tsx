@@ -66,6 +66,14 @@ export default function SettingsPage() {
         </button>
 
         <button
+          onClick={() => router.push('/rooms')}
+          className="w-full rounded border border-panel-border bg-panel-surface p-4 flex items-center justify-between text-left"
+        >
+          <p className="text-sm font-medium text-panel-text">Homes &amp; Rooms</p>
+          <ChevronRight size={16} className="text-panel-muted" />
+        </button>
+
+        <button
           onClick={() => router.push('/devices')}
           className="w-full rounded border border-panel-border bg-panel-surface p-4 flex items-center justify-between text-left"
         >

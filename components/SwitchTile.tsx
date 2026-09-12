@@ -23,8 +23,10 @@ export default function SwitchTile({
       onClick={onTap}
       disabled={disabled}
       aria-pressed={isOn}
-      className={`text-left rounded border p-4 transition-colors disabled:opacity-40 ${
-        isOn ? 'border-amber/40 bg-amber/10' : 'border-panel-border bg-panel-surface'
+      className={`text-left rounded border p-4 transition-colors ${
+        disabled ? 'opacity-40' : ''
+      } ${
+        isOn ? 'border-on/50 bg-on/10' : 'border-panel-border bg-panel-surface'
       }`}
     >
       <DeviceIcon iconKey={iconKey} active={isOn} size={24} />
